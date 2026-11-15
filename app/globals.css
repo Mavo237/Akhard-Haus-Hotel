@@ -1,0 +1,11 @@
+:root {
+  --green: #0A2E1F;
+  --gold: #C9A227;
+  --cream: #FFF8E7;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--cream); color: #111; }
+h1, h2 { font-family: serif; }
+.handwriting { font-family: cursive; color: var(--gold); font-size: 3rem; }
+.btn-gold { background: var(--gold); color: white; padding: 14px 28px; border: none; border-radius: 50px; font-weight: bold; cursor: pointer; }
+.card { background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
