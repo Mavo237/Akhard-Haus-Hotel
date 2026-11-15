@@ -20,7 +20,7 @@ function BookForm() {
   async function payWithMoMo() {
     if (!name || !phone) return alert("Fill name and MoMo number");
     // Call Node.js API
-    const res = await fetch("/api/payments", {
+    const res = await fetch("/Api/payments", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, phone, room, price, date })
