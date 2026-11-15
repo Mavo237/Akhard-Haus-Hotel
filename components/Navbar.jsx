@@ -1,8 +1,9 @@
-import Limport Link from "next/link";
+import Link from "next/link";
+
 export default function Navbar() {
   return (
     <nav style={{ background: "#0A2E1F", padding: "18px 30px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-      <Link href="/" style={{ color: "#C9A227", fontSize: "1.6rem", fontWeight: "bold", textDecoration: "none", fontFamily: "var(--font-playfair)" }}>AKHARD HAUS</Link>
+      <Link href="/" style={{ color: "#C9A227", fontSize: "1.6rem", fontWeight: "bold", textDecoration: "none" }}>AKHARD HAUS</Link>
       <div style={{ display: "flex", gap: 20 }}>
         <Link href="/" style={{ color: "white", textDecoration: "none" }}>Home</Link>
         <Link href="/book" style={{ color: "white", textDecoration: "none" }}>Book</Link>
@@ -10,4 +11,4 @@ export default function Navbar() {
       </div>
     </nav>
   );
-}￼Enter
+                                        }
