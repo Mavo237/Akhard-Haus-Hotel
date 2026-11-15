@@ -1,63 +1,34 @@
-import Link from 'next/link';
-import { Card } from 'components/card';
-import { ContextAlert } from 'components/context-alert';
-import { Markdown } from 'components/markdown';
-import { RandomQuote } from 'components/random-quote';
-import { getNetlifyContext } from 'utils';
 
-const contextExplainer = `
-The card below is rendered on the server based on the value of \`process.env.CONTEXT\` 
-([docs](https://docs.netlify.com/configure-builds/environment-variables/#build-metadata)):
-`;
+import Navbar from "../components/Navbar";
+import RoomCard from "../components/RoomCard";
+import Link from "next/link";
 
-const preDynamicContentExplainer = `
-The card content below is fetched by the client-side from \`/quotes/random\` (see file \`app/quotes/random/route.js\`) with a different quote shown on each page load:
-`;
+export default function Home() {
+  const rooms = [
+    { id: 1, name: "Deluxe Apartment", price: 25000, img: "https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=800", desc: "1 Bedroom, Kitchen, WiFi, Mountain View" },
+    { id: 2, name: "Executive Suite", price: 40000, img: "https://images.unsplash.com/photo-1590490360182-c33d57733427?w=800", desc: "King Bed, Balcony, Breakfast Included" },
+    { id: 3, name: "Family Villa", price: 60000, img: "https://images.unsplash.com/photo-1582719508461-905c673771fd?w=800", desc: "2 Bedrooms, Living Room, Private Parking" },
+  ];
 
-const ctx = getNetlifyContext();
+  return (
+    <div>
+      <Navbar />
+      {/* HERO */}
+      <section style={{ background: "#0A2E1F", color: "white", padding: "80px 20px", textAlign: "center" }}>
+        <p className="handwriting">Welcome to Akhard</p>
+        <h1 style={{ fontSize: "3.5rem", margin: "10px 0" }}>Luxury Stay in <span style={{ color: "#C9A227" }}>Buea</span></h1>
+        <p style={{ opacity: 0.8, marginBottom: 30 }}>Mount Fako View • Fast WiFi • 24/7 Power • Breakfast</p>
+        <Link href="/book"><button className="btn-gold">Book Your Stay Now →</button></Link>
+      </section>
 
-export default function Page() {
-    return (
-        <div className="flex flex-col gap-12 sm:gap-16">
-            <section>
-                <ContextAlert className="mb-6" />
-                <h1 className="mb-4">Netlify Platform Starter – Next.js</h1>
-                <p className="mb-6 text-lg">
-                    Deploy the latest version of Next.js — including Turbopack, React Compiler, and the new caching APIs
-                    — on Netlify in seconds. No configuration or custom adapter required.
-                </p>
-                <Link href="https://docs.netlify.com/frameworks/next-js/overview/" className="btn btn-lg sm:min-w-64">
-                    Read the Docs
-                </Link>
-            </section>
-            {!!ctx && (
-                <section className="flex flex-col gap-4">
-                    <Markdown content={contextExplainer} />
-                    <RuntimeContextCard />
-                </section>
-            )}
-            <section className="flex flex-col gap-4">
-                <Markdown content={preDynamicContentExplainer} />
-                <RandomQuote />
-            </section>
+      {/* ROOMS */}
+      <section style={{ padding: "60px 20px", maxWidth: 1100, margin: "0 auto" }}>
+        <p className="handwriting" style={{ textAlign: "center" }}>Our Rooms</p>
+        <h2 style={{ textAlign: "center", fontSize: "2.2rem", marginBottom: 40 }}>Choose Your Comfort</h2>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gap: 25 }}>
+          {rooms.map(r => <RoomCard key={r.id} room={r} />)}
         </div>
-    );
-}
-
-function RuntimeContextCard() {
-    const title = `Netlify Context: running in ${ctx} mode.`;
-    if (ctx === 'dev') {
-        return (
-            <Card title={title}>
-                <p>Next.js will rebuild any page you navigate to, including static pages.</p>
-            </Card>
-        );
-    } else {
-        const now = new Date().toISOString();
-        return (
-            <Card title={title}>
-                <p>This page was statically-generated at build time ({now}).</p>
-            </Card>
-        );
-    }
-}
+      </section>
+    </div>
+  );
+          }
