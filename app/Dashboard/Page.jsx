@@ -6,7 +6,7 @@ export default function Dashboard() {
   const [bookings, setBookings] = useState([]);
 
   useEffect(() => {
-    fetch("/api/payments").then(r => r.json()).then(setBookings);
+    fetch("/Api/payments").then(r => r.json()).then(setBookings);
   }, []);
 
   const total = bookings.reduce((sum, b) => sum + (b.price || 0), 0);
