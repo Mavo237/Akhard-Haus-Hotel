@@ -1,6 +1,4 @@
 
-import "./globals.css";
-
 export const metadata = {
   title: "Akhard Haus Hotel",
   description: "Book your stay in Buea",
