@@ -1,72 +1,64 @@
-here"use client";
+
+"use client";
 import { useState, useEffect, Suspense } from "react";
-import { useSearchParams } from "next/navigation";
-import Navbar from "../../components/Navbar";
+import { useSearchParams, useRouter } from "next/navigation";
 
 function BookForm() {
   const params = useSearchParams();
+  const router = useRouter();
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
+  const [room, setRoom] = useState(params.get("room") || "Standard Room");
+  const [price, setPrice] = useState(params.get("price") || 15000);
   const [date, setDate] = useState("");
-  const [room, setRoom] = useState("Deluxe Apartment");
-  const [price, setPrice] = useState(25000);
-  const [step, setStep] = useState("form"); // form -> payment -> success
+  const [loading, setLoading] = useState(false);
+  const [msg, setMsg] = useState("");
 
-  useEffect(() => {
-    if (params.get("room")) setRoom(params.get("room"));
-    if (params.get("price")) setPrice(Number(params.get("price")));
-  }, [params]);
-
-  async function payWithMoMo() {
-    if (!name || !phone) return alert("Fill name and MoMo number");
-    // Call Node.js API
-    const res = await fetch("/Api/payments", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, phone, room, price, date })
-    });
-    const data = await res.json();
-    if (data.success) setStep("success");
+  async function handleBook(e) {
+    e.preventDefault();
+    setLoading(true);
+    setMsg("");
+    try {
+      const res = await fetch("/api/payments", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, phone, room, price: Number(price), date }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setMsg("Booking Successful! Redirecting...");
+        setTimeout(() => router.push("/dashboard"), 1000);
+      } else {
+        setMsg("Booking failed. Try again.");
+      }
+    } catch (err) {
+      setMsg("Error: Could not connect to server. Redeploy and try again.");
+    }
+    setLoading(false);
   }
 
-  if (step === "success") return (
-    <div style={{ textAlign: "center", padding: 60 }}>
-      <p className="handwriting">Thank You!</p>
-      <h1>Booking Confirmed 🎉</h1>
-      <p>We sent confirmation to {phone}. See you in Buea!</p>
-      <a href={`https://wa.me/237650000000?text=Hi Akhard Haus, I just booked ${room} for ${date}`}>Confirm on WhatsApp</a>
-    </div>
-  );
-
   return (
-    <div>
-      <Navbar />
-      <div style={{ maxWidth: 600, margin: "40px auto", padding: 20 }}>
-        <p className="handwriting" style={{ textAlign: "center" }}>Reserve Your Room</p>
-        <h1 style={{ textAlign: "center", marginBottom: 30 }}>Book {room}</h1>
-        <div className="card" style={{ padding: 30 }}>
-          <label>Full Name</label>
-          <input value={name} onChange={e => setName(e.target.value)} placeholder="e.g. Joel Njie" style={{ width: "100%", padding: 12, margin: "8px 0 18px", borderRadius: 10, border: "1px solid #ddd" }} />
-          <label>MoMo Number (MTN)</label>
-          <input value={phone} onChange={e => setPhone(e.target.value)} placeholder="650 00 00 00" style={{ width: "100%", padding: 12, margin: "8px 0 18px", borderRadius: 10, border: "1px solid #ddd" }} />
-          <label>Check-in Date</label>
-          <input type="date" value={date} onChange={e => setDate(e.target.value)} style={{ width: "100%", padding: 12, margin: "8px 0 18px", borderRadius: 10, border: "1px solid #ddd" }} />
-          <div style={{ background: "#FFF8E7", padding: 15, borderRadius: 12, marginBottom: 20, display: "flex", justifyContent: "space-between" }}>
-            <span>{room}</span><b>{price.toLocaleString()} FCFA</b>
-          </div>
-          <h3 style={{ marginBottom: 10 }}>Pay with MTN MoMo</h3>
-          <div style={{ display: "flex", gap: 10, marginBottom: 20 }}>
-            <button style={{ flex: 1, padding: 12, background: "#FFCC00", border: "none", borderRadius: 10, fontWeight: "bold" }}>🟡 MTN MoMo</button>
-            <button style={{ flex: 1, padding: 12, background: "#FF6B00", color: "white", border: "none", borderRadius: 10, fontWeight: "bold" }}>Orange Money</button>
-          </div>
-          <button className="btn-gold" style={{ width: "100%" }} onClick={payWithMoMo}>Pay {price.toLocaleString()} FCFA with MoMo →</button>
-          <p style={{ fontSize: "0.8rem", color: "#888", textAlign: "center", marginTop: 12 }}>You will receive a prompt on your phone to enter MoMo PIN</p>
-        </div>
-      </div>
+    <div style={{ padding: 20, maxWidth: 500, margin: "0 auto", background: "#fff", borderRadius: 12, marginTop: 20 }}>
+      <h2>Book Your Room</h2>
+      <form onSubmit={handleBook}>
+        <input placeholder="Full Name" value={name} onChange={(e) => setName(e.target.value)} required />
+        <input placeholder="MTN MoMo Number e.g 677000000" value={phone} onChange={(e) => setPhone(e.target.value)} required />
+        <select value={room} onChange={(e) => setRoom(e.target.value)}>
+          <option>Standard Room</option>
+          <option>Deluxe Room</option>
+          <option>Executive Suite</option>
+        </select>
+        <input type="number" value={price} onChange={(e) => setPrice(e.target.value)} required />
+        <input type="date" value={date} onChange={(e) => setDate(e.target.value)} required />
+        <button type="submit" disabled={loading} style={{ width: "100%", padding: 14, background: "#000", color: "#fff", border: "none", borderRadius: 8 }}>
+          {loading ? "Processing..." : `Pay ${Number(price).toLocaleString()} FCFA with MoMo`}
+        </button>
+      </form>
+      {msg && <p>{msg}</p>}
     </div>
   );
 }
 
 export default function BookPage() {
   return <Suspense><BookForm /></Suspense>;
-                                    }
+}
