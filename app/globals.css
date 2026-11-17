@@ -3,3 +3,4 @@ body { margin: 0; font-family: Arial, sans-serif; background: #f5f5f5; }
 a { text-decoration: none; }
 button { cursor: pointer; }
 input, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ccc; border-radius: 8px; }
+a[href*="netlify"]{display:none!important}
