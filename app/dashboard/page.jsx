@@ -2,11 +2,11 @@
 import { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
 
-export default function Dashboard() {
+export default function dashboard() {
   const [bookings, setBookings] = useState([]);
 
   useEffect(() => {
-    fetch("/Api/payments").then(r => r.json()).then(setBookings);
+    fetch("/api/payments").then(r => r.json()).then(setbookings);
   }, []);
 
   const total = bookings.reduce((sum, b) => sum + (b.price || 0), 0);
